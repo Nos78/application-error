@@ -1,14 +1,14 @@
 # application-errors
 Custom error module for node.js. Implementation of a collection of classes
-derived from Error, that can be used as a basis for implementing application
-specific errors.
+derived from `Error`, ready to use as-is or can be used as a basis for
+implementing your own application specific errors.
 
-### Custom Errors
+### A package of custom error classes
 The package implements a base class, ApplicationError, derived from the built-in
 Error class and from which all other error classes are derived.
 
-When trapping errors in a try...catch (err), err is an instanceof Error and
-ApplicationError.
+When trapping errors in a `try {} catch (err) {}` block, `err` is an `instanceof Error and
+ApplicationError`.
 
 
 
@@ -21,11 +21,17 @@ Commit your new error to github at https://github.com/nos78/application-errors
 
 
 
-# Installing
-To install the package, simply enter `npm install application-errors`. To add
-the package as a dependancy in your project, use `npm install --save application-errors`, which will add the relevant dependancy string to your package.json.
+# Installing & Using application-errors
 
-# Using the classes
+## installing
+To install the package, simply enter `npm install application-errors`.
+
+### Installing as a dependancy
+To add the package as a dependancy in your project, use
+`npm install --save application-errors`, which will add the relevant
+dependancy string to your package.json.
+
+## Using the classes
 To include all of the error classes in youur project, just add this line to the
 module that needs it:
 `const customErrors = require('application-errors');`
@@ -33,9 +39,10 @@ module that needs it:
 Then you can throw an error using one of the custon error classes:
 `throw new customErrors.IllegalArgumentError("badParameter", "some garbage");`
 
-All the class constructors have default parameter values and will cope with undefined/null contents.
+All the class constructors have default parameter values and will cope with
+undefined/null contents.
 
-## Including individual classes
+### Including individual classes
 Don't want your project including lots of unneeded code? Just require the class
 you need, with the following line in the source file that needs it:
 `const IllegalOperationError = require('illegal-operation-error')`
@@ -43,7 +50,7 @@ you need, with the following line in the source file that needs it:
 `const IllegalOperationError = require('./path/to/node_modules/illegal-operation-error');`
 
 
-# Classes
+# Documentation
 This custom errors package includes the following:
 
 ### ApplicationError
