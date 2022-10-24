@@ -1,0 +1,35 @@
+{
+  "name": "application-errors",
+  "version": "0.0.1",
+  "description": "Custom error module for node.js. ApplicationError (and derived classes) can be used as a basis for implementing application specific errors. class ApplicationError extends Error, sets the name of the error & creates a stack trace, and sets some useful properties for node.js applications.",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js"
+  },
+  "scripts": {
+    "test": "mocha --ui tdd"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nos78/application-errors.git"
+  },
+  "keywords": [
+    "custom",
+    "error",
+    "class",
+    "javascript",
+    "node",
+    "extends",
+    "application"
+  ],
+  "author": "Noscere",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/Nos78/application-errors/issues"
+  },
+  "homepage": "https://github.com/Nos78/application-errors#readme",
+  "devDependencies": {
+    "mocha": "^10.1.0",
+    "vscode": "^1.1.37"
+  }
+}
