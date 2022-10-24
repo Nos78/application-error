@@ -49,7 +49,8 @@ undefined/null contents.
 Don't want your project including lots of unneeded code? Just require the class
 you need, with the following line in the source file that needs it:
 > const IllegalOperationError = require('illegal-operation-error');
-(This is still to be tested, so you may need to specify the path:)
+
+This is still to be tested, so you may need to specify the path:
 > const IllegalOperationError = require('./path/to/node_modules/illegal-operation-error');
 
 
