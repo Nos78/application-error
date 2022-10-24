@@ -40,7 +40,7 @@ module that needs it:
 `const customErrors = require('application-errors');`
 
 Then you can throw an error using one of the custon error classes:
-`throw new customErrors.IllegalArgumentError("badParameter", "some garbage");`
+> throw new customErrors.IllegalArgumentError("badParameter", "some garbage");
 
 All the class constructors have default parameter values and will cope with
 undefined/null contents.
