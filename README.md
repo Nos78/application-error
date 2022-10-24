@@ -58,9 +58,9 @@ This is still to be tested, so you may need to specify the path:
 This custom errors package includes the following:
 
 ### ApplicationError
-Base error class, deriving from Error.
+Base error class, deriving from **Error**.
 
-> class ApplicationError extends Error {
+> class **ApplicationError** extends **Error**
 > - constructor(message = "")
 > -- message defaults to "Application Error" if unset.
 >
@@ -72,7 +72,7 @@ Additional properties:
 
 `this.message = message` (set by parent Error class).
 
-All error classes deriving from `ApplicationError` have the above properties
+All error classes deriving from **`ApplicationError`** have the above properties
 assigned when instanced. The beauty of inheritance.
 
 The name of the error will be the class name, and the stack trace will not
@@ -80,9 +80,9 @@ have additional garbage dumped on it due to the creation of the new error and
 chain of contructor calls.
 
 ### IllegalArgumentError
-Derives from IllegalOperationError.
+Derives from **IllegalOperationError**.
 
-> class IllegalArgumentError extends IllegalOperationError
+> class **IllegalArgumentError** extends **IllegalOperationError**
 > - constructor(badArgument, arguementContents)
 
 Has additional properties set when instanced:
@@ -90,9 +90,9 @@ Has additional properties set when instanced:
 `this.contents`
 
 ### IllegalOperationError
-Derives from ApplicationError
+Derives from **ApplicationError**
 
-> class IllegalOperationError extends ApplicationError
+> class **IllegalOperationError** extends **ApplicationError**
 > - constructor(badOperation, additionalMessage)
 
 Additional properties:
