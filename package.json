@@ -20,7 +20,10 @@
     "javascript",
     "node",
     "extends",
-    "application"
+    "application",
+    "ApplicationError",
+    "IllegalOperationError",
+    "IllegalArgumentError"
   ],
   "author": "Noscere",
   "license": "Apache-2.0",
