@@ -61,13 +61,11 @@ This custom errors package includes the following:
 Base error class, deriving from Error.
 
 > class ApplicationError extends Error {
+> - constructor(message = "")
+> -- message defaults to "Application Error" if unset.
 >
->     constructor(message = "")
->
->     // message defaults to "Application Error" if unset.
->
->     this.name = this.constructor.name
->     Error.captureStackTrace(this, this.constructor);
+> - this.name = this.constructor.name
+> - Error.captureStackTrace(this, this.constructor);
 >
 
 Additional properties:
@@ -85,8 +83,7 @@ chain of contructor calls.
 Derives from IllegalOperationError.
 
 > class IllegalArgumentError extends IllegalOperationError
->
->     constructor(badArgument, arguementContents)
+> - constructor(badArgument, arguementContents)
 
 Has additional properties set when instanced:
 `this.argument`
@@ -96,8 +93,7 @@ Has additional properties set when instanced:
 Derives from ApplicationError
 
 > class IllegalOperationError extends ApplicationError
->
->     constructor(badOperation, additionalMessage)
+> - constructor(badOperation, additionalMessage)
 
 Additional properties:
 `this.operation = badOperation`
