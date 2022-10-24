@@ -48,9 +48,9 @@ undefined/null contents.
 ### Including individual classes
 Don't want your project including lots of unneeded code? Just require the class
 you need, with the following line in the source file that needs it:
-`const IllegalOperationError = require('illegal-operation-error')`
+> const IllegalOperationError = require('illegal-operation-error');
 (This is still to be tested, so you may need to specify the path:)
-`const IllegalOperationError = require('./path/to/node_modules/illegal-operation-error');`
+> const IllegalOperationError = require('./path/to/node_modules/illegal-operation-error');
 
 
 # Documentation
