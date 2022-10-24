@@ -19,6 +19,9 @@ this package relevant?
 
 Commit your new error to github at https://github.com/nos78/application-errors
 
+### Sponsor
+Would you like to contribute to this and other open source projects by [codin.gq](https://codin.gq)? Head over to [this PayPal.me fund raiser](https://paypal.me/mrdatafund)
+
 
 
 # Installing & Using application-errors
