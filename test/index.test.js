@@ -3,7 +3,7 @@
  * @Email: noscere1978@gmail.com
  * @Date: 2022-10-18 18:57:02
  * @Last Modified by: Noscere
- * @Last Modified time: 2022-10-24 01:17:14
+ * @Last Modified time: 2022-10-25 22:17:53
  * @Description: Unit test file to test the extension logic. Much of the
  * tests will exercise the functionality of the fileheader module, since
  * this library contains most (if not all) of the header manipulation
@@ -28,11 +28,11 @@ const { setgroups, off } = require('process');
 const ApplicationError = require('../application-error');
 const IllegalOperationError = require('../illegal-operation-error');
 const IllegalArgumentError = require('../illegal-argument-error');
+const RuntimeError = require('../runtime-error');
+
 const CustomErrors = require('../index.js');
 
 const moduleName = "application-errors";
-
-
 
 function ok(expression, message) {
     if(!expression) throw new Error(message);
@@ -57,6 +57,10 @@ function hasSomeBadArgument() {
 
 function hasANullArgument() {
     throw new IllegalArgumentError('aNullArgument', null);
+}
+
+function doRuntimeError() {
+    throw new RuntimeError('an unhandled runtime error occurred')
 }
 
 suite(`Testing ${moduleName} exported classes - successful instantiation`, function() {
@@ -136,6 +140,24 @@ suite(`Testing ${moduleName} exported classes - successful instantiation`, funct
             assert(err instanceof Error, "Thrown error was not correctly instantiated. Expected an instance of Error");
             // check error is correctly named
             assert(err.name = 'IllegalArgumentError');
+        }
+    });
+
+    test(`Throwing CustomErrors.RuntimeError with null arguments correctly instanced.`, function() {
+        function throwRuntimeError(msg) {
+            throw new CustomErrors.RuntimeError(msg);
+        }
+
+        try {
+            throwRuntimeError(null);
+        } catch(err) {
+            assert(err instanceof CustomErrors.RuntimeError, "Runtime Error not correctly instantiated. Expected instance of CustomErrors.RuntimeError");
+            assert(err instanceof RuntimeError, "Runtime Error not correctly instantiated. Expected instance of RuntimeError");
+            assert(err instanceof CustomErrors.ApplicationError, "Runtime Error not correctly instantiated. Expected an instance of CustomErrors.ApplicationError");
+            assert(err instanceof ApplicationError, "Runtime Error not correctly instantiated. Expected instance of ApplicationError");
+            assert(err instanceof Error, "Runtime Error not correctly instantiated. Expected to be an instance of Error");
+            // Check instance has a name
+            assert(err.name = 'RuntimeError');
         }
     });
 });
@@ -291,5 +313,29 @@ suite(`Deep testing ${moduleName} classes, individually imported via const class
             assert.strictEqual(err.argument, 'aNullArgument');
             assert.strictEqual(err.contents, 'null');
         }  
+    });
+
+    test(`RuntimeError - doRuntimeError()`, function() {
+        try {
+            doRuntimeError();
+        } catch (err) {
+            assert(err.name = 'RuntimeError');
+
+            assert(err instanceof RuntimeError);
+            assert(err instanceof ApplicationError);
+            assert(err instanceof Error);
+
+            assert(require('util').isError(err));
+
+            assert(err.stack);
+
+            assert.strictEqual(err.toString(), 'RuntimeError: an unhandled runtime error occurred');
+
+            assert.strictEqual(err.stack.split('\n')[0], 'RuntimeError: an unhandled runtime error occurred');
+            // The first stack frame should be the function where the error was thrown.
+            assert.strictEqual(err.stack.split('\n')[1].indexOf('doRuntimeError'), 7);
+            // The line number where the error was thrown should match the line above in doRuntimeError() = line 63
+            assert.notEqual(err.stack.split('\n')[1].indexOf('test.js:63'), -1);
+        }
     });
 });
