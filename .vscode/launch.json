@@ -1,0 +1,30 @@
+{
+    "version": "0.1.0",
+    "configurations": [
+    
+        {
+            "name": "Debug Test.js",
+            "type": "node",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "runtimeExecutable": "/usr/local/bin/node",
+            "runtimeArgs": [
+                ""
+            ],
+            "program": "${workspaceFolder}/test/index.test.js",
+            "stopOnEntry": true
+        },
+        {
+            "name": "Debug Mocha Test script",
+            "type": "node",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "runtimeExecutable": "/usr/local/bin/mocha",
+            "runtimeArgs": [
+                "--ui tdd", "--reporter mochawesome"
+            ],
+            "program": "${workspaceFolder}/test/index.test.js",
+            "stopOnEntry": true
+        }
+    ]
+}
