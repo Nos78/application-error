@@ -1,3 +1,10 @@
+/*
+ *
+ * @Last Modified by:   Noscere
+ *
+ * @Last Modified time: 2022-10-27 00:38:39
+ */
+
 # application-errors
 Custom error module for node.js. Implementation of a collection of classes
 derived from `Error`, ready to use as-is or can be used as a basis for
@@ -55,9 +62,15 @@ This is still to be tested, so you may need to specify the path:
 
 
 # Documentation
-This custom errors package includes the following:
+This custom errors package includes the following classes:
+* ApplicationError
+** RuntimeError
+*** ObjectError
+** IllegalOperationError
+*** IllegalArgumentError
 
-### ApplicationError
+
+## ApplicationError
 Base error class, deriving from **Error**.
 
 > class **ApplicationError** extends **Error**
@@ -79,6 +92,15 @@ The name of the error will be the class name, and the stack trace will not
 have additional garbage dumped on it due to the creation of the new error and
 chain of contructor calls.
 
+### IllegalOperationError
+Derives from **ApplicationError**
+
+> class **IllegalOperationError** extends **ApplicationError**
+> - constructor(badOperation, additionalMessage)
+
+Additional properties:
+`this.operation = badOperation`
+
 ### IllegalArgumentError
 Derives from **IllegalOperationError**.
 
@@ -89,11 +111,48 @@ Has additional properties set when instanced:
 `this.argument`
 `this.contents`
 
-### IllegalOperationError
+### RuntimeError
 Derives from **ApplicationError**
 
-> class **IllegalOperationError** extends **ApplicationError**
-> - constructor(badOperation, additionalMessage)
+This is the base class for errors thrown during the normal runtime of an
+application.  Whilst Javascript does not have any concept of checked vs
+unchecked exceptions (or errors), we've borrowed from Java's error
+definitions, and errors that occur during normal operation of the
+virtual machine all derive from their RuntimeException. Things like
+arithmetic errors, divide by zero, pointer exceptions & null references
+are all things that the programmer can affect programmatically rather
+than be caught by the compiler or interpreter.
+
+Making a distinct difference in the naming of the error classes should
+(in theory) assist in good development, and/or hint at what went wrong
+and aid the debugging process.
+
+> class **RuntimeError** extends **ApplicationError**
+
+Has no additional properties.
+
+### ObjectError
+Derives from **RuntimeError**. This error signifies an object has
+been rejected for whatever reason - failed validation, malformed,
+perhaps corrupted during serialization.
+
+> class **ObjectError** extends **RuntimeError**
+> - constructor(*objectInstance*, *objectName*, *message* = "")
+
+*objectInstance* - the object instance being rejected.
+*objectName* - the name of the rejected object. In lieu of this
+parameter, if not passed the constructor will try to use
+*objectInstance.name*.
 
 Additional properties:
-`this.operation = badOperation`
+`this.objectInstance`
+`this.objectName`
+
+The constructor will itself throw an **IllegalArgumentError** if both
+*objectInstance* and *objectName* are null - whilst it is possible
+to call the contructor with (null, null, null), something went
+really bad or we have a severely lazy programmer if this ever
+happened.
+
+**Note**: this thrown error may change, as it probably should also
+be throwing a runtime derived error, not **IllegalArgumentError**.
