@@ -3,7 +3,7 @@
  * @Email: noscere1978@gmail.com
  * @Date: 2022-10-25 21:58:40 
  * @Last Modified by: Noscere
- * @Last Modified time: 2022-10-25 22:09:13
+ * @Last Modified time: 2022-10-26 18:31:05
  * @Description: RuntimeError
  * 
  * There is no checked vs unchecked exceptions in
@@ -22,8 +22,6 @@ class RuntimeError extends ApplicationError {
     constructor(message = "") {
         // Let base class handle sanity checking
         super(message);
-        // Error name is class name
-        this.name = this.constructor.name;
     }
 }
 

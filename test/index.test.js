@@ -3,7 +3,7 @@
  * @Email: noscere1978@gmail.com
  * @Date: 2022-10-18 18:57:02
  * @Last Modified by: Noscere
- * @Last Modified time: 2022-10-25 22:17:53
+ * @Last Modified time: 2022-10-26 19:30:48
  * @Description: Unit test file to test the extension logic. Much of the
  * tests will exercise the functionality of the fileheader module, since
  * this library contains most (if not all) of the header manipulation
@@ -20,7 +20,7 @@
 // The module 'assert' provides assertion methods from node
 var assert = require('assert');
 const { setgroups, off } = require('process');
-
+const addContext = require('mochawesome/addContext');
 // Include the errors module, the target of this unit test file
 //const customErrors = require('../index');
 
@@ -29,7 +29,7 @@ const ApplicationError = require('../application-error');
 const IllegalOperationError = require('../illegal-operation-error');
 const IllegalArgumentError = require('../illegal-argument-error');
 const RuntimeError = require('../runtime-error');
-
+const ObjectError = require('../object-error');
 const CustomErrors = require('../index.js');
 
 const moduleName = "application-errors";
@@ -62,6 +62,19 @@ function hasANullArgument() {
 function doRuntimeError() {
     throw new RuntimeError('an unhandled runtime error occurred')
 }
+
+function doObjectError(object, name, msg) {
+    throw new ObjectError(object, name, msg);
+}
+
+// More error require statements
+// TODO move these above the function declarations (this will break the line numbers in the tests below)
+const PropertyAccessError = require('../property-access-error');
+
+
+
+// define a variable for the name of the class being tested (saves typing it all the time!)
+var testingClassName = "";
 
 suite(`Testing ${moduleName} exported classes - successful instantiation`, function() {
 
@@ -336,6 +349,135 @@ suite(`Deep testing ${moduleName} classes, individually imported via const class
             assert.strictEqual(err.stack.split('\n')[1].indexOf('doRuntimeError'), 7);
             // The line number where the error was thrown should match the line above in doRuntimeError() = line 63
             assert.notEqual(err.stack.split('\n')[1].indexOf('test.js:63'), -1);
+        }
+    });
+
+    testingClassName = 'ObjectError';
+    test(`ObjectError - doObjectError() with sensible arguments.`, function() {
+        // Set up test variables
+        const anObjectInstance = new Array(1);
+        const objectName = anObjectInstance.name;
+        const msg = "An object error occurred."
+
+        try {
+            doObjectError(anObjectInstance, objectName, msg);
+        } catch (err) {
+            assert(err.name = `${testingClassName}`);
+
+            assert(err instanceof ObjectError);
+            assert(err instanceof RuntimeError);
+            assert(err instanceof ApplicationError);
+            assert(err instanceof Error);
+
+            assert(require('util').isError(err));
+
+            assert(err.stack);
+
+            assert.strictEqual(err.toString(), `${testingClassName}: ${msg}`);
+
+            assert.strictEqual(err.stack.split('\n')[0], `${testingClassName}: ${msg}`);
+            // The first stack frame should be the function where the error was thrown.
+            assert.strictEqual(err.stack.split('\n')[1].indexOf('doObjectError'), 7);
+            // The line number where the error was thrown should match the line above in doObjectError() = line 67
+            assert.notEqual(err.stack.split('\n')[1].indexOf('test.js:67'), -1);
+        }
+    });
+
+    test(`ObjectError - doObjectError() with no objectName.`, function() {
+        // Set up test variables
+        const anObjectInstance = new Array(1);
+        const objectName = anObjectInstance.name;
+        const msg = "An object error occurred."
+
+        try {
+            doObjectError(anObjectInstance, null, msg);
+        } catch (err) {
+            assert(err.name = `${testingClassName}`);
+
+            assert(err instanceof ObjectError);
+            assert(err instanceof RuntimeError);
+            assert(err instanceof ApplicationError);
+            assert(err instanceof Error);
+
+            assert(require('util').isError(err));
+
+            assert(err.stack);
+
+            assert.strictEqual(err.toString(), `${testingClassName}: ${msg}`);
+
+            assert.strictEqual(err.stack.split('\n')[0], `${testingClassName}: ${msg}`);
+            // The first stack frame should be the function where the error was thrown.
+            assert.strictEqual(err.stack.split('\n')[1].indexOf('doObjectError'), 7);
+            // The line number where the error was thrown should match the line above in doRuntimeError() = line 67
+            assert.notEqual(err.stack.split('\n')[1].indexOf('test.js:67'), -1);
+        }
+    });
+
+    test(`ObjectError - doObjectError() with no objectInstance or objectName`, function() {
+        // Set up test variables
+        const anObjectInstance = new Array(1);
+        const objectName = anObjectInstance.name;
+        const msg = "An object error occurred."
+
+        try {
+            doObjectError(null, null, msg);
+        } catch (err) {
+            // The above function call should actually
+            // throw an IllegalArgumentError instead!
+            assert(err.name = `IllegalArgumentError`);
+
+            assert(err instanceof IllegalArgumentError);
+            assert(err instanceof ApplicationError);
+            assert(err instanceof Error);
+
+            assert(require('util').isError(err));
+
+            assert(err.stack);
+            addContext(this, err.stack);
+            
+            assert.strictEqual(err.toString(), `IllegalArgumentError: Illegal operation: objectName\nMessage: Invalid argument provided.\nArgument Contents: undefined`);
+
+            assert.strictEqual(err.stack.split('\n')[0], `IllegalArgumentError: Illegal operation: objectName`);
+            // The first stack frame should be the function where the error was thrown.
+            assert.strictEqual(err.stack.split('\n')[3].indexOf('new ObjectError'), 7);
+            // The line number where the error was thrown should match the line above in doObjectError() = line 67
+            assert.notEqual(err.stack.split('\n')[4].indexOf('test.js:67'), -1);
+        }
+    });
+
+    function doPropertyAccessError(propertyName, property, propertyContents, objectInstance, objectName, msg) {
+        throw new PropertyAccessError(propertyName, property, propertyContents, objectInstance, objectName, msg);
+    }
+    testingClassName = 'PropertyAccessError';
+    test(`${testingClassName} - doPropertyAccessError() with sensible arguments.`, function() {
+        // Set up test variables
+        const anObjectInstance = new Array(1);
+        const objectName = anObjectInstance.name;
+        const propertyName = anObjectInstance.length.name;
+        const msg = "An property access error occurred."
+
+        try {
+            doPropertyAccessError("BadProperty", null, "undefined", anObjectInstance, objectName, msg);
+        } catch (err) {
+            assert(err.name = `${testingClassName}`);
+
+            assert(err instanceof PropertyAccessError);
+            assert(err instanceof ObjectError);
+            assert(err instanceof RuntimeError);
+            assert(err instanceof ApplicationError);
+            assert(err instanceof Error);
+
+            assert(require('util').isError(err));
+
+            assert(err.stack);
+
+            assert.strictEqual(err.toString(), `${testingClassName}: ${msg}`);
+
+            assert.strictEqual(err.stack.split('\n')[0], `${testingClassName}: ${msg}`);
+            // The first stack frame should be the function where the error was thrown.
+            assert.strictEqual(err.stack.split('\n')[1].indexOf('doPropertyAccessError'), 7);
+            // The line number where the error was thrown should match the line above in doObjectError() = line 67
+            assert.notEqual(err.stack.split('\n')[1].indexOf('test.js:449'), -1);
         }
     });
 });
