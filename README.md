@@ -1,10 +1,3 @@
-/*
- *
- * @Last Modified by:   Noscere
- *
- * @Last Modified time: 2022-10-27 00:38:39
- */
-
 # application-errors
 Custom error module for node.js. Implementation of a collection of classes
 derived from `Error`, ready to use as-is or can be used as a basis for
