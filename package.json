@@ -1,6 +1,6 @@
 {
   "name": "application-errors",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Custom error module for node.js. ApplicationError (and derived classes) can be used as a basis for implementing application specific errors. class ApplicationError extends Error, sets the name of the error & creates a stack trace, and sets some useful properties for node.js applications.",
   "main": "index.js",
   "exports": {
