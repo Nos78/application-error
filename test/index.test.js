@@ -3,7 +3,7 @@
  * @Email: noscere1978@gmail.com
  * @Date: 2022-10-18 18:57:02
  * @Last Modified by: Noscere
- * @Last Modified time: 2022-10-26 19:30:48
+ * @Last Modified time: 2022-10-30 16:21:19
  * @Description: Unit test file to test the extension logic. Much of the
  * tests will exercise the functionality of the fileheader module, since
  * this library contains most (if not all) of the header manipulation
@@ -70,8 +70,6 @@ function doObjectError(object, name, msg) {
 // More error require statements
 // TODO move these above the function declarations (this will break the line numbers in the tests below)
 const PropertyAccessError = require('../property-access-error');
-
-
 
 // define a variable for the name of the class being tested (saves typing it all the time!)
 var testingClassName = "";
@@ -477,7 +475,49 @@ suite(`Deep testing ${moduleName} classes, individually imported via const class
             // The first stack frame should be the function where the error was thrown.
             assert.strictEqual(err.stack.split('\n')[1].indexOf('doPropertyAccessError'), 7);
             // The line number where the error was thrown should match the line above in doObjectError() = line 67
-            assert.notEqual(err.stack.split('\n')[1].indexOf('test.js:449'), -1);
+            assert.notEqual(err.stack.split('\n')[1].indexOf('test.js:447'), -1);
+        }
+    });
+
+    const PropertyUndefinedError = require('../property-undefined-error');
+    function doPropertyUndefinedError(objectInstance, objectName, msg) {
+        // Try to simulate a real-world access of a undefined property
+        if(objectInstance.doesNotExists === void 0) { // void 0 is a guaranteed way of checking for
+                                                      // 'undefined' (which is not a keyword in some
+                                                      // versions of javascript)
+            throw new PropertyUndefinedError("doesNotExists", "some value", objectInstance, objectName, msg);
+        }
+    }
+    testingClassName = 'PropertyUndefinedError';
+    test(`${testingClassName} - doPropertyUndefinedError() with sensible arguments.`, function() {
+        // Set up test variables
+        const anObjectInstance = new Array(1);
+        const objectName = anObjectInstance.name;
+        const msg = "A property undefined error occurred."
+
+        try {
+            doPropertyUndefinedError(anObjectInstance, objectName, msg);
+        } catch (err) {
+            assert(err.name = `${testingClassName}`);
+
+            assert(err instanceof PropertyUndefinedError);
+            assert(err instanceof PropertyAccessError);
+            assert(err instanceof ObjectError);
+            assert(err instanceof RuntimeError);
+            assert(err instanceof ApplicationError);
+            assert(err instanceof Error);
+
+            assert(require('util').isError(err));
+
+            assert(err.stack);
+            addContext(this, err.stack);
+            assert.strictEqual(err.toString(), `${testingClassName}: ${msg}`);
+
+            assert.strictEqual(err.stack.split('\n')[0], `${testingClassName}: ${msg}`);
+            // The first stack frame should be the function where the error was thrown.
+            assert.strictEqual(err.stack.split('\n')[1].indexOf('doPropertyUndefinedError'), 7);
+            // The line number where the error was thrown should match the line above in doPropertyUndefinedError() = line 488
+            assert.notEqual(err.stack.split('\n')[1].indexOf('test.js:488'), -1);
         }
     });
 });
