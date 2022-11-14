@@ -108,3 +108,8 @@ dist
 
 # trash folder
 trash/
+
+# npm test report
+mochawesome-report/
+test/
+
