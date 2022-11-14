@@ -59,6 +59,7 @@ This custom errors package includes the following classes:
 * ApplicationError
 ** RuntimeError
 *** ObjectError
+*** ValidationError
 ** IllegalOperationError
 *** IllegalArgumentError
 
@@ -149,3 +150,22 @@ happened.
 
 **Note**: this thrown error may change, as it probably should also
 be throwing a runtime derived error, not **IllegalArgumentError**.
+
+### ValidationError
+Deriving from **RuntimeError**, this error can be raised when given
+data fails validation. As the name suggests, exceptions should be
+raised in *exceptional* circumstance, and good example of such is
+during a data container class constructor, when the given data has
+failed validation against some business logic rules.
+
+This error should not be thrown just because a user has specified a
+startDate that is later than an endDate.
+
+> class **ValidationError** extends **RuntimeError**
+> - constructor(*object* = {}, *message* = "")
+*object* - the container object of the failed data.
+*message* - the error message explaining the validation failure and
+additional information.
+
+Additional properties set when instanced:
+`this.object` the container of the data that has failed validation.
