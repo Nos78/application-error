@@ -3,7 +3,7 @@
  * @Email: noscere1978@gmail.com
  * @Date: 2022-10-18 18:57:02
  * @Last Modified by: Noscere
- * @Last Modified time: 2022-10-30 16:21:19
+ * @Last Modified time: 2022-11-14 02:28:50.980
  * @Description: Unit test file to test the extension logic. Much of the
  * tests will exercise the functionality of the fileheader module, since
  * this library contains most (if not all) of the header manipulation
@@ -70,6 +70,7 @@ function doObjectError(object, name, msg) {
 // More error require statements
 // TODO move these above the function declarations (this will break the line numbers in the tests below)
 const PropertyAccessError = require('../property-access-error');
+const ValidationError = require('../validation-error');
 
 // define a variable for the name of the class being tested (saves typing it all the time!)
 var testingClassName = "";
@@ -169,6 +170,25 @@ suite(`Testing ${moduleName} exported classes - successful instantiation`, funct
             assert(err instanceof Error, "Runtime Error not correctly instantiated. Expected to be an instance of Error");
             // Check instance has a name
             assert(err.name = 'RuntimeError');
+        }
+    });
+
+    test(`Throwing CustomErrors.ValidationError with null arguments correctly instanced.`, function() {
+        function throwValidationError(obj, msg) {
+            throw new CustomErrors.ValidationError(obj, msg);
+        }
+
+        try {
+            throwValidationError(null);
+        } catch(err) {
+            assert(err instanceof CustomErrors.RuntimeError, "ValidationError not correctly instantiated. Expected instance of CustomErrors.RuntimeError");
+            assert(err instanceof CustomErrors.ValidationError, "ValidationError not correctly instantiated. Expected instance of CustomErrors.ValidationError");
+            assert(err instanceof ValidationError, "Validation not correctly instantiated. Expected instance of ValidationError");
+            assert(err instanceof CustomErrors.ApplicationError, "ValidationError not correctly instantiated. Expected an instance of CustomErrors.ApplicationError");
+            assert(err instanceof ApplicationError, "ValidationError not correctly instantiated. Expected instance of ApplicationError");
+            assert(err instanceof Error, "ValidationError not correctly instantiated. Expected to be an instance of Error");
+            // Check instance has a name
+            assert(err.name = 'ValidationError');
         }
     });
 });
@@ -474,8 +494,8 @@ suite(`Deep testing ${moduleName} classes, individually imported via const class
             assert.strictEqual(err.stack.split('\n')[0], `${testingClassName}: ${msg}`);
             // The first stack frame should be the function where the error was thrown.
             assert.strictEqual(err.stack.split('\n')[1].indexOf('doPropertyAccessError'), 7);
-            // The line number where the error was thrown should match the line above in doObjectError() = line 67
-            assert.notEqual(err.stack.split('\n')[1].indexOf('test.js:447'), -1);
+            // The line number where the error was thrown should match the line above in doPropertyAccessError() = line 67
+            assert.notEqual(err.stack.split('\n')[1].indexOf('test.js:467'), -1);
         }
     });
 
@@ -517,7 +537,40 @@ suite(`Deep testing ${moduleName} classes, individually imported via const class
             // The first stack frame should be the function where the error was thrown.
             assert.strictEqual(err.stack.split('\n')[1].indexOf('doPropertyUndefinedError'), 7);
             // The line number where the error was thrown should match the line above in doPropertyUndefinedError() = line 488
-            assert.notEqual(err.stack.split('\n')[1].indexOf('test.js:488'), -1);
+            assert.notEqual(err.stack.split('\n')[1].indexOf('test.js:508'), -1);
         }
     });
+
+    function doValidationError(obj, msg) {
+        throw new ValidationError(obj, msg);
+    }        
+    testingClassName = 'ValidationError';
+    test(`ValidationError - doValidationError()`, function() {
+        var msg = "Invalid email address provided";
+        var emailAddr = "notAnEmail."
+        try {
+            // Simulate a data validation error
+            doValidationError(emailAddr, "Invalid email address provided");
+        } catch (err) {
+            assert(err.name = testingClassName);
+
+            assert(err instanceof ValidationError);
+            assert(err instanceof RuntimeError);
+            assert(err instanceof ApplicationError);
+            assert(err instanceof Error);
+
+            assert(require('util').isError(err));
+
+            assert(err.stack);
+
+            assert.strictEqual(err.toString(), `${testingClassName}: ${msg}`);
+
+            assert.strictEqual(err.stack.split('\n')[0], `${testingClassName}: ${msg}`);
+            // The first stack frame should be the function where the error was thrown.
+            assert.strictEqual(err.stack.split('\n')[1].indexOf('doValidationError'), 7);
+            // The line number where the error was thrown should match the line above in doRuntimeError() = line 545
+            assert.notEqual(err.stack.split('\n')[1].indexOf('test.js:545'), -1);
+            assert.strictEqual(err.object, emailAddr);
+        }
+    });    
 });
