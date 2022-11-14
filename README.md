@@ -56,12 +56,12 @@ This is still to be tested, so you may need to specify the path:
 
 # Documentation
 This custom errors package includes the following classes:
-* ApplicationError
-* * RuntimeError
-* * * ObjectError
-* * * ValidationError
-* * IllegalOperationError
-* * * IllegalArgumentError
+* **ApplicationError**
+* * **RuntimeError**
+* * * **ObjectError**
+* * * **ValidationError**
+* * **IllegalOperationError**
+* * * **IllegalArgumentError**
 
 
 ## ApplicationError
