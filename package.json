@@ -8,6 +8,7 @@
   },
   "scripts": {
     "test": "mocha --ui tdd --reporter mochawesome"
+    "publish": "clean-publish"
   },
   "repository": {
     "type": "git",
@@ -35,5 +36,8 @@
     "mocha": "^10.1.0",
     "mochawesome": "^7.1.3",
     "vscode": "^1.1.37"
+  },
+  "dependencies": {
+    "clean-publish": "^4.0.1"
   }
 }
