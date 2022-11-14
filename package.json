@@ -7,7 +7,7 @@
     ".": "./index.js"
   },
   "scripts": {
-    "test": "mocha --ui tdd --reporter mochawesome"
+    "test": "mocha --ui tdd --reporter mochawesome",
     "publish": "clean-publish"
   },
   "repository": {
